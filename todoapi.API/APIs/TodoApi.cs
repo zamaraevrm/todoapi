@@ -5,7 +5,7 @@ using todoapi.Infrastructure.Repositories;
 
 namespace todoapi.API.APIs;
 
-public class TodoApi : IModule
+public class TodoApi : IApi
 {
     public IEndpointRouteBuilder MapEndpoints(IEndpointRouteBuilder endpoints)
     {
@@ -17,7 +17,7 @@ public class TodoApi : IModule
         return endpoints;
     }
 
-    public IServiceCollection RegisterModule(IServiceCollection builder)
+    public IServiceCollection RegisterServices(IServiceCollection builder)
     {
         builder.AddScoped<ITodoRepository, TodoRepository>();
         return builder;

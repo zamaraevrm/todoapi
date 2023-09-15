@@ -1,22 +1,22 @@
 ﻿namespace todoapi.API.Services;
 
-public interface IModule
+public interface IApi
 {
-    IServiceCollection RegisterModule(IServiceCollection builder);
+    IServiceCollection RegisterServices(IServiceCollection builder);
     IEndpointRouteBuilder MapEndpoints(IEndpointRouteBuilder endpoints);
 }
 
 public static class ModuleExtensions
 {
     // this could also be added into the DI container
-    static readonly List<IModule> registeredModules = new List<IModule>();
+    static readonly List<IApi> registeredModules = new List<IApi>();
 
     public static IServiceCollection RegisterModules(this IServiceCollection services)
     {
-        var modules = DiscoverModules();
+        var modules = DiscoverApis();
         foreach (var module in modules)
         {
-            module.RegisterModule(services);
+            module.RegisterServices(services);
             registeredModules.Add(module);
         }
 
@@ -32,12 +32,12 @@ public static class ModuleExtensions
         return app;
     }
 
-    private static IEnumerable<IModule> DiscoverModules()
+    private static IEnumerable<IApi> DiscoverApis()
     {
-        return typeof(IModule).Assembly
+        return typeof(IApi).Assembly
             .GetTypes()
-            .Where(p => p.IsClass && p.IsAssignableTo(typeof(IModule)))
+            .Where(p => p.IsClass && p.IsAssignableTo(typeof(IApi)))
             .Select(Activator.CreateInstance)
-            .Cast<IModule>();
+            .Cast<IApi>();
     }
 }
